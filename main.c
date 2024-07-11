@@ -8,8 +8,8 @@
 
 int main()
 {
-	ADDSUB();
-	//MUL();
+	//ADDSUB();
+	MUL();
 
 	return 0;
 }

@@ -55,8 +55,24 @@ void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 
 	for (int i = 0; i < s->top; i++)
 	{
-		sum = l->d[i] + s->d[i] + carry;
-		carry = (sum < l->d[i]);
+		sum = l->d[i] + s->d[i];
+		if (sum < l->d[i])
+		{
+			sum += carry;
+			carry = 1;
+		}
+		else
+		{
+			sum += carry;
+			if (sum < carry)
+			{
+				carry = 1;
+			}
+			else
+			{
+				carry = 0;
+			}
+		}
 		r->d[i] = sum;
 	}
 	for (int i = s->top; i < l->top; i++)
@@ -83,7 +99,7 @@ void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 
 	for (int i = 0; i < len; i++)
 	{
-		r->d[i] = (a->d[i] - b->d[i] - borrow) & 0xffffffff;
+		r->d[i] = (a->d[i] - b->d[i] - borrow);
 
 		// a->d[i] == b->d[i] 일때는 borrow 유지
 		if (a->d[i] < b->d[i])

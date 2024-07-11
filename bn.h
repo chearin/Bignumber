@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 typedef struct bignum_st {
-    uint32_t d[9]; //d[top]은 1이면 carry, -1(0xffffffff)이면 borrow
+    uint32_t d[16]; //덧셈, 뺄셈에서 d[8]는 carry 또는 borrow가 있으면 1
     int top; //실제 사용중인 d 배열의 크기
 }BIGNUM;
 
