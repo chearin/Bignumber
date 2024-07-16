@@ -14,7 +14,7 @@ FILE* fileOpen(char* fname, char* mode)
 	return fp;
 }
 
-//hexlen은 int형 배열 hex의 길이
+//hexlen은 uint32_t형 배열 hex의 길이
 void str2hex(const unsigned char* str, uint32_t* hex, size_t hexlen)
 {
 	unsigned char buffer[3] = { 0 };

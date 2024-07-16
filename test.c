@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "test.h"
+#include "cpucycles.h"
 
 void ADDSUB()
 {
@@ -21,6 +22,10 @@ void ADDSUB()
 	BIGNUM P = { {0,}, 0 };
 	size_t len = 0;
 
+	unsigned long long start = 0, end = 0;
+	unsigned long long ADDcc = 0, SUBcc = 0;
+	int count = 0;
+
 	fp0 = fileOpen("P256값.txt", "r");
 	fp1 = fileOpen("TV_opA_add.txt", "r");
 	fp2 = fileOpen("TV_opB_add.txt", "r");
@@ -32,7 +37,7 @@ void ADDSUB()
 	len = strlen(input_str) / (sizeof(int) * 2);
 	str2hex(input_str, P256, len);
 	initBignum(P256, len, &P);
-	int count = 0;
+
 	while (fscanf(fp1, "%s", input_str) != EOF)
 	{
 		count++;
@@ -49,7 +54,10 @@ void ADDSUB()
 
 		//소수체 덧셈연산
 		initBignum(opC, len, &C);
+		start = cpucycles();
 		PF_addition(&C, &P, &A, &B);
+		end = cpucycles();
+		ADDcc += (end - start);
 
 		//결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
@@ -60,7 +68,10 @@ void ADDSUB()
 
 		//소수체 뺄셈연산
 		initBignum(opC, len, &C);
+		start = cpucycles();
 		PF_substraction(&C, &P, &A, &B);
+		end = cpucycles();
+		SUBcc += (end - start);
 
 		//결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
@@ -69,6 +80,8 @@ void ADDSUB()
 		}
 		fprintf(fp4, "\n\n");
 	}
+	printf("ADDcc = %d\n", ADDcc / count);
+	printf("SUBcc = %d\n", SUBcc / count);
 
 	fclose(fp0);
 	fclose(fp1);
@@ -95,6 +108,10 @@ void MUL()
 	BIGNUM C = { {0,}, 0 };
 	size_t len = 0;
 
+	unsigned long long start = 0, end = 0;
+	unsigned long long OScc = 0, PScc = 0;
+	int count = 0;
+
 	fp1 = fileOpen("TV_opA.txt", "r");
 	fp2 = fileOpen("TV_opB.txt", "r");
 	fp3 = fileOpen("TV_PF_OS.txt", "w");
@@ -103,6 +120,7 @@ void MUL()
 
 	while (fscanf(fp1, "%s", input_str) != EOF)
 	{
+		count++;
 		//opA값 저장
 		len = strlen(input_str) / (sizeof(int) * 2);
 		str2hex(input_str, opA, len);
@@ -116,7 +134,10 @@ void MUL()
 
 		//OS 곱셈연산
 		initBignum(opC, A.top + B.top, &C);
+		start = cpucycles();
 		OperandScanning(&C, &A, &B);
+		end = cpucycles();
+		OScc += (end - start);
 
 		//결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
@@ -127,7 +148,10 @@ void MUL()
 
 		//PS 곱셈연산
 		initBignum(opC, A.top + B.top, &C);
+		start = cpucycles();
 		ProductScanning(&C, &A, &B);
+		end = cpucycles();
+		PScc += (end - start);
 
 		//결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
@@ -138,7 +162,7 @@ void MUL()
 
 		//제곱연산
 		initBignum(opC, A.top + B.top, &C);
-		Squaring(&C, &A, &B);
+		Squaring(&C, &A);
 
 		//결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
@@ -147,6 +171,8 @@ void MUL()
 		}
 		fprintf(fp5, "\n\n");
 	}
+	printf("OScc = %d\n", OScc / count);
+	printf("PScc = %d\n", PScc / count);
 
 	fclose(fp1);
 	fclose(fp2);

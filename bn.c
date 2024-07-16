@@ -7,7 +7,7 @@ void initBignum(const uint32_t* num, const size_t inlen, BIGNUM* BN)
 	{
 		BN->d[i] = num[i];
 	}
-	for (int i = inlen; i < 9; i++)
+	for (int i = inlen; i < 16; i++)
 	{
 		BN->d[i] = 0;
 	}

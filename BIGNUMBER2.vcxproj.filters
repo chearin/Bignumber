@@ -30,6 +30,9 @@
     <ClCompile Include="mul.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="cpucycles.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -42,6 +45,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="mul.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cpucycles.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
