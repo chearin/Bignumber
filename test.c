@@ -97,26 +97,28 @@ void MUL()
 	FILE* fp3;
 	FILE* fp4;
 	FILE* fp5;
+	FILE* fp6;
 
 	unsigned char input_str[1000] = { 0 };
 	uint32_t opA[8] = { 0 };
 	uint32_t opB[8] = { 0 };
 	uint32_t opC[16] = { 0 };
 
-	BIGNUM A = { {0,}, 0 };
-	BIGNUM B = { {0,}, 0 };
-	BIGNUM C = { {0,}, 0 };
+	BIGNUM A = { {0,}, 0, 0 };
+	BIGNUM B = { {0,}, 0, 0 };
+	BIGNUM C = { {0,}, 0, 0 };
 	size_t len = 0;
 
 	unsigned long long start = 0, end = 0;
-	unsigned long long OScc = 0, PScc = 0;
+	unsigned long long OScc = 0, PScc = 0, KAcc = 0;
 	int count = 0;
 
 	fp1 = fileOpen("TV_opA.txt", "r");
 	fp2 = fileOpen("TV_opB.txt", "r");
-	fp3 = fileOpen("TV_PF_OS.txt", "w");
-	fp4 = fileOpen("TV_PF_PS.txt", "w");
-	fp5 = fileOpen("TV_PF_sqr.txt", "w");
+	fp3 = fileOpen("TV_OS.txt", "w");
+	fp4 = fileOpen("TV_PS.txt", "w");
+	fp5 = fileOpen("TV_sqr.txt", "w");
+	fp6 = fileOpen("TV_kara.txt", "w");
 
 	while (fscanf(fp1, "%s", input_str) != EOF)
 	{
@@ -139,7 +141,7 @@ void MUL()
 		end = cpucycles();
 		OScc += (end - start);
 
-		//결과값 파일에 쓰기
+		//OS 결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
 		{
 			fprintf(fp3, "%08X", C.d[i]);
@@ -153,30 +155,48 @@ void MUL()
 		end = cpucycles();
 		PScc += (end - start);
 
-		//결과값 파일에 쓰기
+		//PS 결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
 		{
 			fprintf(fp4, "%08X", C.d[i]);
 		}
 		fprintf(fp4, "\n\n");
 
-		//제곱연산
-		initBignum(opC, A.top + B.top, &C);
-		Squaring(&C, &A);
+	//	//제곱연산
+	//	initBignum(opC, A.top + B.top, &C);
+	//	Squaring(&C, &A);
 
-		//결과값 파일에 쓰기
+	//	//제곱 결과값 파일에 쓰기
+	//	for (int i = C.top - 1; i >= 0; i--)
+	//	{
+	//		fprintf(fp5, "%08X", C.d[i]);
+	//	}
+	//	fprintf(fp5, "\n\n");
+	//}
+
+		//카라츄바 연산
+		initBignum(opC, A.top + B.top, &C);
+		start = cpucycles();
+		kara(&C, &A, &B);
+		end = cpucycles();
+		KAcc += (end - start);
+
+		//카라츄바 결과값 파일에 쓰기
 		for (int i = C.top - 1; i >= 0; i--)
 		{
-			fprintf(fp5, "%08X", C.d[i]);
+			fprintf(fp6, "%08X", C.d[i]);
 		}
-		fprintf(fp5, "\n\n");
+		fprintf(fp6, "\n\n");
 	}
+
 	printf("OScc = %d\n", OScc / count);
 	printf("PScc = %d\n", PScc / count);
+	//printf("KAcc = %d\n", KAcc / count);
 
 	fclose(fp1);
 	fclose(fp2);
 	fclose(fp3);
 	fclose(fp4);
 	fclose(fp5);
+	fclose(fp6);
 }

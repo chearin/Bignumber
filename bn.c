@@ -12,6 +12,7 @@ void initBignum(const uint32_t* num, const size_t inlen, BIGNUM* BN)
 		BN->d[i] = 0;
 	}
 	BN->top = inlen;
+	BN->cb = 0;
 }
 
 //a > b 이면 1, a == b 이면 0, a < b 이면 -1 반환
@@ -82,7 +83,7 @@ void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		r->d[i] = sum;
 	}
 
-	r->d[8] = carry;
+	r->cb = carry;
 	r->top = l->top;
 }
 
@@ -111,7 +112,7 @@ void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 			borrow = 0;
 		}
 	}
-	r->d[8] = borrow;
+	r->cb = borrow;
 	r->top = len;
 
 	// 결과의 앞자리부터 0인지를 확인하고 길이를 줄이는 함수
@@ -134,7 +135,7 @@ void PF_addition(BIGNUM* c, const BIGNUM* P, const BIGNUM* a, const BIGNUM* b)
 
 	BignumberAdd(c, a, b);
 	cmp = compare(c, P);
-	if (c->d[8] || cmp == 0 || cmp == 1)
+	if (c->cb || cmp == 0 || cmp == 1)
 	{
 		BignumberSub(c, c, P);
 	}
@@ -143,7 +144,7 @@ void PF_addition(BIGNUM* c, const BIGNUM* P, const BIGNUM* a, const BIGNUM* b)
 void PF_substraction(BIGNUM* c, const BIGNUM* P, const BIGNUM* a, const BIGNUM* b)
 {
 	BignumberSub(c, a, b);
-	if (c->d[8])
+	if (c->cb)
 	{
 		BignumberAdd(c, c, P);
 	}
