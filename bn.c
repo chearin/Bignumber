@@ -42,7 +42,7 @@ uint32_t compare(const BIGNUM* a, const BIGNUM* b)
 void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 {
 	uint32_t carry = 0;
-	uint32_t sum = 0;
+	uint32_t result = 0;
 
 	//a, b를 긴 길이인 것과 짧은 길이인 것으로 구분
 	BIGNUM* l = a;
@@ -56,16 +56,16 @@ void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 
 	for (int i = 0; i < s->top; i++)
 	{
-		sum = l->d[i] + s->d[i];
-		if (sum < l->d[i])
+		result = l->d[i] + s->d[i];
+		if (result < l->d[i])
 		{
-			sum += carry;
+			result += carry;
 			carry = 1;
 		}
 		else
 		{
-			sum += carry;
-			if (sum < carry)
+			result += carry;
+			if (result < carry)
 			{
 				carry = 1;
 			}
@@ -74,13 +74,13 @@ void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 				carry = 0;
 			}
 		}
-		r->d[i] = sum;
+		r->d[i] = result;
 	}
 	for (int i = s->top; i < l->top; i++)
 	{
-		sum = l->d[i] + carry;
-		carry = (sum < l->d[i]);
-		r->d[i] = sum;
+		result = l->d[i] + carry;
+		carry = (result < l->d[i]);
+		r->d[i] = result;
 	}
 
 	r->cb = carry;
@@ -90,6 +90,7 @@ void BignumberAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 {
 	uint32_t borrow = 0;
+	uint32_t result = 0;
 	size_t len = a->top;
 
 	// len은 a, b 중 긴쪽
@@ -100,7 +101,7 @@ void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 
 	for (int i = 0; i < len; i++)
 	{
-		r->d[i] = (a->d[i] - b->d[i] - borrow);
+		result = (a->d[i] - b->d[i] - borrow);
 
 		// a->d[i] == b->d[i] 일때는 borrow 유지
 		if (a->d[i] < b->d[i])
@@ -111,6 +112,7 @@ void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		{
 			borrow = 0;
 		}
+		r->d[i] = result;
 	}
 	r->cb = borrow;
 	r->top = len;

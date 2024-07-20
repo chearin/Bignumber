@@ -173,7 +173,6 @@ void MUL()
 	//	}
 	//	fprintf(fp5, "\n\n");
 	//}
-
 		//카라츄바 연산
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
@@ -187,11 +186,11 @@ void MUL()
 			fprintf(fp6, "%08X", C.d[i]);
 		}
 		fprintf(fp6, "\n\n");
+		
 	}
-
 	printf("OScc = %d\n", OScc / count);
 	printf("PScc = %d\n", PScc / count);
-	//printf("KAcc = %d\n", KAcc / count);
+	printf("KAcc = %d\n", KAcc / count);
 
 	fclose(fp1);
 	fclose(fp2);

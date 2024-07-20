@@ -16,36 +16,48 @@ void kara(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 
 	uint32_t AB[2] = { 0, };
 
-	if (a->top != b->top)
+	int l = a->top;
+
+	if (l < b->top)
 	{
-		printf("karatsuba len error\n");
-		return;
+		l = b->top;
 	}
 
 	//base case
-	if (a->top == 1)
+	if (l == 1)
 	{
 		divisionMul(AB, a->d[0], b->d[0]);
 		r->d[0] = AB[0];
 		r->d[1] = AB[1];
 		r->top = 2;
-		return;
+		for (int i = 0; i < 2; i++)
+		{
+			if (r->d[i] == 0)
+			{
+				r->top--;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return;		
 	}
 	
 	//recursive case
 	//a0, a1, b0, b1 ³ª´©±â
-	for (int i = 0; i < a->top / 2; i++)
+	for (int i = 0; i < l / 2; i++)
 	{
 		a0.d[i] = a->d[i];
 		a0.top++;
 		b0.d[i] = b->d[i];
 		b0.top++;
 	}
-	for (int i = (a->top + 1) / 2; i < a->top; i++)
+	for (int i = l / 2; i < l; i++)
 	{	
-		a1.d[i - a->top / 2] = a->d[i];
+		a1.d[i - l / 2] = a->d[i];
 		a1.top++;
-		b1.d[i - a->top / 2] = b->d[i];
+		b1.d[i - l / 2] = b->d[i];
 		b1.top++;
 	}
 	//asum = a1 + a0, bsum = b1 + b0
@@ -77,7 +89,10 @@ void kara(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		R2.d[i + a0.top * 2] = R2.d[i];
 		R2.d[i] = 0;
 	}
-	R2.top += (a0.top * 2);
+	if (R2.top)
+	{
+		R2.top += (a0.top * 2);
+	}	
 
 	//R1*2^l
 	for (int i = R1.top - 1; i >= 0; i--)
@@ -85,7 +100,10 @@ void kara(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		R1.d[i + a0.top] = R1.d[i];
 		R1.d[i] = 0;
 	}
-	R1.top += a0.top;
+	if (R1.top)
+	{
+		R1.top += a0.top;
+	}	
 
 	//R2*2^2l + R1*2^l + R0
 	BignumberAdd(r, &R2, &R1);
