@@ -108,7 +108,7 @@ void BignumberSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		{
 			borrow = 1;
 		}
-		else if(a->d[i] > b->d[i])
+		else if (a->d[i] > b->d[i])
 		{
 			borrow = 0;
 		}

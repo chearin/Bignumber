@@ -12,6 +12,7 @@ int main()
 {
 	ADDSUB();
 	MUL();
+	REDUCTION();
 
 	return 0;
 }

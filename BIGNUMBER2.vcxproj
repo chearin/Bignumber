@@ -132,6 +132,7 @@
     <ClCompile Include="karatsuba.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mul.c" />
+    <ClCompile Include="reduction.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="util.c" />
   </ItemGroup>
@@ -140,6 +141,7 @@
     <ClInclude Include="cpucycles.h" />
     <ClInclude Include="karatsuba.h" />
     <ClInclude Include="mul.h" />
+    <ClInclude Include="reduction.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>

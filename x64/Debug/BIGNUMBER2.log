@@ -1,2 +1,3 @@
-﻿  karatsuba.c
+﻿  reduction.c
+C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\reduction.c(3,6): warning C4029: 선언된 정식 매개 변수 목록이 정의와 다릅니다.
   BIGNUMBER2.vcxproj -> C:\Users\happy\source\repos\2024(인턴)\ECC\x64\Debug\BIGNUMBER2.exe

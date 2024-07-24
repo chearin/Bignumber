@@ -36,6 +36,9 @@
     <ClCompile Include="karatsuba.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="reduction.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -54,6 +57,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="karatsuba.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="reduction.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

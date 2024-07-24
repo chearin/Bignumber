@@ -16,10 +16,10 @@ void ADDSUB()
 	uint32_t opB[8] = { 0 };
 	uint32_t opC[8] = { 0 };
 
-	BIGNUM A = { {0,}, 0};
-	BIGNUM B = { {0,}, 0 };
-	BIGNUM C = { {0,}, 0 };
-	BIGNUM P = { {0,}, 0 };
+	BIGNUM A = { {0,}, 0, 0 };
+	BIGNUM B = { {0,}, 0, 0 };
+	BIGNUM C = { {0,}, 0, 0 };
+	BIGNUM P = { {0,}, 0, 0 };
 	size_t len = 0;
 
 	unsigned long long start = 0, end = 0;
@@ -92,12 +92,12 @@ void ADDSUB()
 
 void MUL()
 {
-	FILE* fp1;
-	FILE* fp2;
-	FILE* fp3;
-	FILE* fp4;
-	FILE* fp5;
-	FILE* fp6;
+	FILE* fp1 = NULL;
+	FILE* fp2 = NULL;
+	FILE* fp3 = NULL;
+	FILE* fp4 = NULL;
+	FILE* fp5 = NULL;
+	FILE* fp6 = NULL;
 
 	unsigned char input_str[1000] = { 0 };
 	uint32_t opA[8] = { 0 };
@@ -198,4 +198,63 @@ void MUL()
 	fclose(fp4);
 	fclose(fp5);
 	fclose(fp6);
+}
+
+void REDUCTION()
+{
+	FILE* fp0 = NULL;
+	FILE* fp1 = NULL;
+	FILE* fp2 = NULL;
+
+	unsigned char input_str[1000] = { 0 };
+	uint32_t P256[8] = { 0 };
+	uint32_t opA[16] = { 0 };
+	uint32_t opB[8] = { 0 };
+
+	BIGNUM A = { {0,}, 0, 0 };
+	BIGNUM B = { {0,}, 0, 0 };
+	BIGNUM P = { {0,}, 0, 0 };
+	size_t len = 0;
+
+	unsigned long long start = 0, end = 0;
+	unsigned long long FASTcc = 0;
+	int count = 0;
+
+	fp0 = fileOpen("P256값.txt", "r");
+	fp1 = fileOpen("TV_MUL_TV.txt", "r");
+	fp2 = fileOpen("TV_FASTREDUCTION.txt", "w");
+
+	//p256값 저장
+	fscanf(fp0, "%s", input_str);
+	len = strlen(input_str) / (sizeof(int) * 2);
+	str2hex(input_str, P256, len);
+	initBignum(P256, len, &P);
+
+	while (fscanf(fp1, "%s", input_str) != EOF)
+	{
+		count++;
+		//opA값 저장
+		len = strlen(input_str) / (sizeof(int) * 2);
+		str2hex(input_str, opA, len);
+		initBignum(opA, len, &A);
+
+		//빠른 감산
+		initBignum(opB, P.top, &B);
+		start = cpucycles();
+		fastReduction(&B, &A, &P);
+		end = cpucycles();
+		FASTcc += (end - start);
+
+		//빠른 감산 결과값 파일에 쓰기
+		for (int i = B.top - 1; i >= 0; i--)
+		{
+			fprintf(fp2, "%08X", B.d[i]);
+		}
+		fprintf(fp2, "\n\n");
+	}
+	printf("FASTcc = %d\n", FASTcc / count);
+
+	fclose(fp0);
+	fclose(fp1);
+	fclose(fp2);
 }
