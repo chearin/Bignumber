@@ -173,7 +173,7 @@ void MUL()
 	//	}
 	//	fprintf(fp5, "\n\n");
 	//}
-		//카라츄바 연산
+		//카라추바 연산
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
 		kara(&C, &A, &B);
