@@ -5,7 +5,9 @@
 #include "bn.h"
 #include "karatsuba.h"
 #include "reduction.h"
+#include "inversion.h"
 
 void ADDSUB();
 void MUL();
 void REDUCTION();
+void INVERSION();

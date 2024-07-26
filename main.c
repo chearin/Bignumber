@@ -10,9 +10,10 @@
 
 int main()
 {
-	ADDSUB();
+	//ADDSUB();
 	MUL();
-	REDUCTION();
+	//REDUCTION();
+	//INVERSION();
 
 	return 0;
 }

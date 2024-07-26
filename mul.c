@@ -124,53 +124,54 @@ void ProductScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 	r->d[r->top - 1] = R[0];
 }
 
-//void Squaring(BIGNUM* r, const BIGNUM* a)
-//{
-//	uint32_t UV[2] = { 0, };
-//	uint32_t R[3] = { 0, };
-//	uint32_t sum = 0;
-//	uint32_t carry = 0;
-//
-//	for (int k = 0; k < a->top * 2 - 1; k++)
-//	{
-//		for (int i = 0; i <= k / 2; i++)
-//		{
-//			int j = k - i;
-//			divisionMul(UV, a->d[i], a->d[j]);
-//			if (i != j)
-//			{
-//				// UV 2배 해주기
-//				carry = UV[1] >> 31;
-//				UV[0] <<= 1;
-//				UV[1] <<= 1;
-//				R[2] += carry;
-//			}
-//			carry = 0;
-//			sum = R[0] + UV[0];
-//			if (sum < R[0])
-//			{
-//				carry = 1;
-//			}
-//			R[0] = sum;
-//
-//			sum = R[1] + carry;
-//			carry = 0;
-//			if (sum < R[1])
-//			{
-//				carry = 1;
-//			}
-//			sum += UV[1];
-//			if (sum < UV[1])
-//			{
-//				carry += 1;
-//			}
-//			R[1] = sum;
-//
-//			R[2] += carry;
-//		}
-//		r->d[k] = R[0];
-//		R[0] = R[1];
-//		R[1] = R[2];
-//		R[2] = 0;
-//	}
-//}
+void Squaring(BIGNUM* r, const BIGNUM* a)
+{
+	uint32_t UV[2] = { 0, };
+	uint32_t R[3] = { 0, };
+	uint32_t sum = 0;
+	uint32_t carry = 0;
+
+	for (int k = 0; k < a->top * 2 - 1; k++)
+	{
+		for (int i = 0; i <= k / 2; i++)
+		{
+			int j = k - i;
+			divisionMul(UV, a->d[i], a->d[j]);
+			if (i != j)
+			{
+				// UV 2배 해주기
+				carry = UV[1] >> 31;
+				UV[0] <<= 1;
+				UV[1] <<= 1;
+				R[2] += carry;
+			}
+			carry = 0;
+			sum = R[0] + UV[0];
+			if (sum < R[0])
+			{
+				carry = 1;
+			}
+			R[0] = sum;
+
+			sum = R[1] + carry;
+			carry = 0;
+			if (sum < R[1])
+			{
+				carry = 1;
+			}
+			sum += UV[1];
+			if (sum < UV[1])
+			{
+				carry += 1;
+			}
+			R[1] = sum;
+
+			R[2] += carry;
+		}
+		r->d[k] = R[0];
+		R[0] = R[1];
+		R[1] = R[2];
+		R[2] = 0;
+	}
+	r->d[r->top - 1] = R[0];
+}

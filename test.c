@@ -162,17 +162,17 @@ void MUL()
 		}
 		fprintf(fp4, "\n\n");
 
-	//	//제곱연산
-	//	initBignum(opC, A.top + B.top, &C);
-	//	Squaring(&C, &A);
+		//제곱연산
+		initBignum(opC, A.top + B.top, &C);
+		Squaring(&C, &A);
 
-	//	//제곱 결과값 파일에 쓰기
-	//	for (int i = C.top - 1; i >= 0; i--)
-	//	{
-	//		fprintf(fp5, "%08X", C.d[i]);
-	//	}
-	//	fprintf(fp5, "\n\n");
-	//}
+		//제곱 결과값 파일에 쓰기
+		for (int i = C.top - 1; i >= 0; i--)
+		{
+			fprintf(fp5, "%08X", C.d[i]);
+		}
+		fprintf(fp5, "\n\n");
+	
 		//카라추바 연산
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
@@ -253,6 +253,65 @@ void REDUCTION()
 		fprintf(fp2, "\n\n");
 	}
 	printf("FASTcc = %d\n", FASTcc / count);
+
+	fclose(fp0);
+	fclose(fp1);
+	fclose(fp2);
+}
+
+void INVERSION()
+{
+	FILE* fp0 = NULL;
+	FILE* fp1 = NULL;
+	FILE* fp2 = NULL;
+
+	unsigned char input_str[1000] = { 0 };
+	uint32_t P256[8] = { 0 };
+	uint32_t opA[16] = { 0 };
+	uint32_t opB[8] = { 0 };
+
+	BIGNUM A = { {0,}, 0, 0 };
+	BIGNUM B = { {0,}, 0, 0 };
+	BIGNUM P = { {0,}, 0, 0 };
+	size_t len = 0;
+
+	unsigned long long start = 0, end = 0;
+	unsigned long long EEAINVcc = 0;
+	int count = 0;
+
+	fp0 = fileOpen("P256값.txt", "r");
+	fp1 = fileOpen("TV_opA_before_INV.txt", "r");
+	fp2 = fileOpen("TV_EEA_INVERSION.txt", "w");
+
+	//p256값 저장
+	fscanf(fp0, "%s", input_str);
+	len = strlen(input_str) / (sizeof(int) * 2);
+	str2hex(input_str, P256, len);
+	initBignum(P256, len, &P);
+
+	while (fscanf(fp1, "%s", input_str) != EOF)
+	{
+		count++;
+		//opA값 저장
+		len = strlen(input_str) / (sizeof(int) * 2);
+		str2hex(input_str, opA, len);
+		initBignum(opA, len, &A);
+
+		//Extended Euclidean 역원
+		initBignum(opB, P.top, &B);
+		start = cpucycles();
+		ExtendedEuclidean(&B, &A, &P);
+		end = cpucycles();
+		EEAINVcc += (end - start);
+
+		//역원 결과값 파일에 쓰기
+		for (int i = B.top - 1; i >= 0; i--)
+		{
+			fprintf(fp2, "%08X", B.d[i]);
+		}
+		fprintf(fp2, "\n\n");
+	}
+	printf("EEAINVcc = %d\n", EEAINVcc / count);
 
 	fclose(fp0);
 	fclose(fp1);
