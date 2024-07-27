@@ -13,7 +13,7 @@ int main()
 	//ADDSUB();
 	MUL();
 	//REDUCTION();
-	//INVERSION();
+	INVERSION();
 
 	return 0;
 }

@@ -34,17 +34,26 @@ void OperandScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 	uint32_t sum = 0;
 	uint32_t carry = 0;
 
-	for (int i = 0; i < r->top; i++)
-	{
-		r->d[i] = 0;
-	}
+	BIGNUM tmpA = { 0, };
+	BIGNUM tmpB = { 0, };
 
 	for (int i = 0; i < a->top; i++)
 	{
+		tmpA.d[i] = a->d[i];
+	}
+	for (int i = 0; i < b->top; i++)
+	{
+		tmpB.d[i] = b->d[i];
+	}
+	tmpA.top = a->top;
+	tmpB.top = b->top;
+
+	for (int i = 0; i < tmpA.top; i++)
+	{
 		UV[1] = 0;
-		for (int j = 0; j < b->top; j++)
+		for (int j = 0; j < tmpB.top; j++)
 		{
-			divisionMul(AB, a->d[i], b->d[j]);
+			divisionMul(AB, tmpA.d[i], tmpB.d[j]);
 			//캐리 확인
 			carry = 0;
 			sum = r->d[i + j] + AB[0];
@@ -63,7 +72,19 @@ void OperandScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 			UV[1] = AB[1] + carry;
 			r->d[i + j] = UV[0];
 		}
-		r->d[i + b->top] = UV[1];
+		r->d[i + tmpB.top] = UV[1];
+	}
+	r->top = tmpA.top + tmpB.top;
+	for (int i = r->top - 1; i >= 0; i--)
+	{
+		if (r->d[i] == 0)
+		{
+			r->top--;
+		}
+		else
+		{
+			break;
+		}
 	}
 }
 
@@ -74,21 +95,30 @@ void ProductScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 	uint32_t sum = 0;
 	uint32_t carry = 0;
 
-	for (int i = 0; i < r->top; i++)
+	BIGNUM tmpA = { 0, };
+	BIGNUM tmpB = { 0, };
+	
+	for (int i = 0; i < a->top; i++)
 	{
-		r->d[i] = 0;
+		tmpA.d[i] = a->d[i];
 	}
-
-	for (int k = 0; k < r->top - 1; k++)
+	for (int i = 0; i < b->top; i++)
 	{
-		for (int i = 0; i < a->top; i++)
+		tmpB.d[i] = b->d[i];
+	}
+	tmpA.top = a->top;
+	tmpB.top = b->top;
+
+	for (int k = 0; k < tmpA.top + tmpB.top - 1; k++)
+	{
+		for (int i = 0; i < tmpA.top; i++)
 		{
 			int j = k - i;
 			if (j < 0)
 			{
 				break;
 			}
-			divisionMul(UV, a->d[i], b->d[j]);
+			divisionMul(UV, tmpA.d[i], tmpB.d[j]);
 			carry = 0;
 			sum = R[0] + UV[0];
 			if (sum < R[0])
@@ -117,11 +147,19 @@ void ProductScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 		R[1] = R[2];
 		R[2] = 0;
 	}
-	if (r->top != 16)
-	{
-		printf("error!!");
-	}
+	r->top = tmpA.top + tmpB.top;
 	r->d[r->top - 1] = R[0];
+	for (int i = r->top - 1; i >= 0; i--)
+	{
+		if (r->d[i] == 0)
+		{
+			r->top--;
+		}
+		else
+		{
+			break;
+		}
+	}
 }
 
 void Squaring(BIGNUM* r, const BIGNUM* a)
@@ -130,20 +168,31 @@ void Squaring(BIGNUM* r, const BIGNUM* a)
 	uint32_t R[3] = { 0, };
 	uint32_t sum = 0;
 	uint32_t carry = 0;
+	uint32_t cbit1 = 0, cbit2 = 0;
 
-	for (int k = 0; k < a->top * 2 - 1; k++)
+	BIGNUM tmpA = { 0, };
+
+	for (int i = 0; i < a->top; i++)
+	{
+		tmpA.d[i] = a->d[i];
+	}
+	tmpA.top = a->top;
+
+	for (int k = 0; k < tmpA.top * 2 - 1; k++)
 	{
 		for (int i = 0; i <= k / 2; i++)
 		{
 			int j = k - i;
-			divisionMul(UV, a->d[i], a->d[j]);
+			divisionMul(UV, tmpA.d[i], tmpA.d[j]);
 			if (i != j)
 			{
 				// UV 2배 해주기
-				carry = UV[1] >> 31;
+				cbit1 = UV[0] >> 31;
 				UV[0] <<= 1;
+				cbit2 = UV[1] >> 31;
 				UV[1] <<= 1;
-				R[2] += carry;
+				UV[1] += cbit1;
+				R[2] += cbit2;
 			}
 			carry = 0;
 			sum = R[0] + UV[0];
@@ -173,5 +222,17 @@ void Squaring(BIGNUM* r, const BIGNUM* a)
 		R[1] = R[2];
 		R[2] = 0;
 	}
+	r->top = tmpA.top * 2;
 	r->d[r->top - 1] = R[0];
+	for (int i = r->top - 1; i >= 0; i--)
+	{
+		if (r->d[i] == 0)
+		{
+			r->top--;
+		}
+		else
+		{
+			break;
+		}
+	}
 }

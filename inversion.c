@@ -84,5 +84,38 @@ void ExtendedEuclidean(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 
 void FLT(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 {
+	uint8_t bit = 0;
+	BIGNUM exp = { 0, };
+	BIGNUM two = { 0, };
 
+	two.d[0] = 2;
+	two.top = 1;
+	
+	//exp¿¡ P¸¦ copy
+	for (int i = 0; i < P->top; i++)
+	{
+		exp.d[i] = P->d[i];
+	}
+	exp.top = P->top;
+
+	//exp = P - 2
+	BignumberSub(&exp, &exp, &two);
+
+	inv->d[0] = 1;
+	inv->top = 1;
+
+	//a^(-1) = a^(p-2)
+	for (int i = exp.top - 1; i >= 0; i--)
+	{
+		for (int j = 31; j >= 0; j--)
+		{
+			Squaring(inv, inv);
+			fastReduction(inv, inv, P);
+			if ((exp.d[i] >> j) & 0x00000001)
+			{
+				ProductScanning(inv, inv, a);
+				fastReduction(inv, inv, P);
+			}
+		}
+	}
 }

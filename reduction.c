@@ -2,6 +2,15 @@
 
 void fastReduction(BIGNUM* r, const BIGNUM* a, const BIGNUM* P)
 {
+	if (compare(a, P) == -1)
+	{
+		for (int i = 0; i < a->top; i++)
+		{
+			r->d[i] = a->d[i];
+		}
+		r->top = a->top;
+		return;
+	}
 	BIGNUM s1 = { {a->d[0], a->d[1], a->d[2], a->d[3], a->d[4], a->d[5], a->d[6], a->d[7]}, 8, 0 };
 	BIGNUM s2 = { {0, 0, 0, a->d[11], a->d[12], a->d[13], a->d[14], a->d[15]}, 8, 0 };
 	BIGNUM s3 = { {0, 0, 0, a->d[12], a->d[13], a->d[14], a->d[15], 0}, 8, 0 };

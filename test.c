@@ -264,6 +264,7 @@ void INVERSION()
 	FILE* fp0 = NULL;
 	FILE* fp1 = NULL;
 	FILE* fp2 = NULL;
+	FILE* fp3 = NULL;
 
 	unsigned char input_str[1000] = { 0 };
 	uint32_t P256[8] = { 0 };
@@ -277,11 +278,13 @@ void INVERSION()
 
 	unsigned long long start = 0, end = 0;
 	unsigned long long EEAINVcc = 0;
+	unsigned long long FLTINVcc = 0;
 	int count = 0;
 
 	fp0 = fileOpen("P256값.txt", "r");
 	fp1 = fileOpen("TV_opA_before_INV.txt", "r");
 	fp2 = fileOpen("TV_EEA_INVERSION.txt", "w");
+	fp3 = fileOpen("TV_FLT_INVERSION.txt", "w");
 
 	//p256값 저장
 	fscanf(fp0, "%s", input_str);
@@ -297,23 +300,39 @@ void INVERSION()
 		str2hex(input_str, opA, len);
 		initBignum(opA, len, &A);
 
-		//Extended Euclidean 역원
+		////Extended Euclidean 역원
+		//initBignum(opB, P.top, &B);
+		//start = cpucycles();
+		//ExtendedEuclidean(&B, &P, &A);
+		//end = cpucycles();
+		//EEAINVcc += (end - start);
+
+		////역원 결과값 파일에 쓰기
+		//for (int i = B.top - 1; i >= 0; i--)
+		//{
+		//	fprintf(fp2, "%08X", B.d[i]);
+		//}
+		//fprintf(fp2, "\n\n");
+
+		//FLT 역원
 		initBignum(opB, P.top, &B);
 		start = cpucycles();
-		ExtendedEuclidean(&B, &A, &P);
+		FLT(&B, &P, &A);
 		end = cpucycles();
-		EEAINVcc += (end - start);
+		FLTINVcc += (end - start);
 
 		//역원 결과값 파일에 쓰기
 		for (int i = B.top - 1; i >= 0; i--)
 		{
-			fprintf(fp2, "%08X", B.d[i]);
+			fprintf(fp3, "%08X", B.d[i]);
 		}
-		fprintf(fp2, "\n\n");
+		fprintf(fp3, "\n\n");
 	}
-	printf("EEAINVcc = %d\n", EEAINVcc / count);
+	//printf("EEAINVcc = %d\n", EEAINVcc / count);
+	printf("FLTINVcc = %d\n", FLTINVcc / count);
 
 	fclose(fp0);
 	fclose(fp1);
 	fclose(fp2);
+	fclose(fp3);
 }
