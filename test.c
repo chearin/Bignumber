@@ -265,6 +265,7 @@ void INVERSION()
 	FILE* fp1 = NULL;
 	FILE* fp2 = NULL;
 	FILE* fp3 = NULL;
+	FILE* fp4 = NULL;
 
 	unsigned char input_str[1000] = { 0 };
 	uint32_t P256[8] = { 0 };
@@ -279,12 +280,14 @@ void INVERSION()
 	unsigned long long start = 0, end = 0;
 	unsigned long long EEAINVcc = 0;
 	unsigned long long FLTINVcc = 0;
+	unsigned long long FLT256INVcc = 0;
 	int count = 0;
 
 	fp0 = fileOpen("P256값.txt", "r");
 	fp1 = fileOpen("TV_opA_before_INV.txt", "r");
 	fp2 = fileOpen("TV_EEA_INVERSION.txt", "w");
 	fp3 = fileOpen("TV_FLT_INVERSION.txt", "w");
+	fp4 = fileOpen("TV_FLT256_INVERSION.txt", "w");
 
 	//p256값 저장
 	fscanf(fp0, "%s", input_str);
@@ -327,12 +330,28 @@ void INVERSION()
 			fprintf(fp3, "%08X", B.d[i]);
 		}
 		fprintf(fp3, "\n\n");
+
+		//FLT256 역원
+		initBignum(opB, P.top, &B);
+		start = cpucycles();
+		FLT256(&B, &P, &A);
+		end = cpucycles();
+		FLT256INVcc += (end - start);
+
+		//역원 결과값 파일에 쓰기
+		for (int i = B.top - 1; i >= 0; i--)
+		{
+			fprintf(fp4, "%08X", B.d[i]);
+		}
+		fprintf(fp4, "\n\n");
 	}
 	//printf("EEAINVcc = %d\n", EEAINVcc / count);
 	printf("FLTINVcc = %d\n", FLTINVcc / count);
+	printf("FLT256INVcc = %d\n", FLT256INVcc / count);
 
 	fclose(fp0);
 	fclose(fp1);
 	fclose(fp2);
 	fclose(fp3);
+	fclose(fp4);
 }

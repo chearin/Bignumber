@@ -9,9 +9,36 @@ void BignumberCopy(BIGNUM* d, const BIGNUM* r)
 	d->top = r->top;
 }
 
-void BignumShift(BIGNUM* r, const BIGNUM* a, uint32_t n)
+void BignumberLShift32(BIGNUM* r, const BIGNUM* a, const uint32_t n)
 {
-	
+	for (int i = 0; i < a->top; i++)
+	{
+		r->d[i + n] = a->d[i];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		r->d[i] = 0;
+	}
+	r->top = a->top + n;
+}
+
+void BignumberLShift(BIGNUM* r, const BIGNUM* a, const uint32_t n)
+{
+	uint32_t q = n / 32;
+	uint32_t rest = n % 32;
+	uint32_t atop = a->top;
+
+	BignumberLShift32(r, a, q);
+	if (rest)
+	{
+		for (int i = r->top; i > 0; i--)
+		{
+			r->d[i] = r->d[i] << rest;
+			r->d[i] += r->d[i - 1] >> (32 - rest);
+		}
+		r->d[0] <<= rest;
+		r->top = atop + q + 1;
+	}
 }
 
 void BinaryLongDivision(uint32_t* q, uint32_t* r, const uint32_t a, const uint32_t b)
@@ -118,4 +145,139 @@ void FLT(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 			}
 		}
 	}
+}
+
+void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
+{
+	BIGNUM tmp = { 0, };
+	BIGNUM z3 = { 0, };
+	BIGNUM z15 = { 0, };
+	BIGNUM t0 = { 0, };
+	BIGNUM t1 = { 0, };
+	BIGNUM t2 = { 0, };
+	BIGNUM t3 = { 0, };
+	BIGNUM t4 = { 0, };
+	BIGNUM t5 = { 0, };
+	
+	//z3
+	Squaring(&tmp, a);
+	fastReduction(&tmp, &tmp, P);
+	ProductScanning(&z3, &tmp, a);
+	fastReduction(&z3, &z3, P);
+
+	//z15
+	Squaring(&tmp, &z3);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 2; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&z15, &tmp, &z3);
+	fastReduction(&z15, &z15, P);
+
+	//t0
+	Squaring(&tmp, &z15);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 2; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&t0, &tmp, &z3);
+	fastReduction(&t0, &t0, P);
+
+	//t1
+	Squaring(&tmp, &t0);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 6; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&t1, &tmp, &t0);
+	fastReduction(&t1, &t1, P);
+
+	//t2
+	Squaring(&tmp, &t1);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 12; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&tmp, &tmp, &t1);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 0; i < 6; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&t2, &tmp, &t0);
+	fastReduction(&t2, &t2, P);
+
+	//t3
+	Squaring(&tmp, &t2);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 2; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&t3, &tmp, &z3);
+	fastReduction(&t3, &t3, P);
+
+	//t4
+	Squaring(&tmp, &t3);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 32; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&tmp, &tmp, a);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 0; i < 95; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	Squaring(&t4, &tmp);
+	fastReduction(&t4, &t4, P);
+
+	//t5
+	Squaring(&tmp, &t4);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 32; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&tmp, &tmp, &t3);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 0; i < 32; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&t5, &tmp, &t3);
+	fastReduction(&t5, &t5, P);
+
+	//t
+	Squaring(&tmp, &t5);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 1; i < 30; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(&tmp, &tmp, &t2);
+	fastReduction(&tmp, &tmp, P);
+	for (int i = 0; i < 2; i++)
+	{
+		Squaring(&tmp, &tmp);
+		fastReduction(&tmp, &tmp, P);
+	}
+	ProductScanning(inv, &tmp, a);
+	fastReduction(inv, inv, P);
 }
