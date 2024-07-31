@@ -98,7 +98,7 @@ void ExtendedEuclidean(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 	while (compare(&one, &u) != 0)
 	{
 		BignumberDivision(&q, &r, &v, &u);
-		kara(&x1, &q, &x1);
+		karaAdd(&x1, &q, &x1);
 		BignumberSub(&x, &x2, &x1);
 
 		BignumberCopy(&v, &u);

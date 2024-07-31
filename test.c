@@ -176,7 +176,8 @@ void MUL()
 		//카라추바 연산
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
-		kara(&C, &A, &B);
+		karaAdd(&C, &A, &B);
+		karaSub(&C, &A, &B);
 		end = cpucycles();
 		KAcc += (end - start);
 
