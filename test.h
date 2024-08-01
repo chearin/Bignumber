@@ -9,5 +9,6 @@
 
 void ADDSUB();
 void MUL();
+void KARA();
 void REDUCTION();
 void INVERSION();

@@ -11,9 +11,10 @@
 int main()
 {
 	//ADDSUB();
-	MUL();
+	//MUL();
+	KARA();
 	//REDUCTION();
-	INVERSION();
+	//INVERSION();
 
 	return 0;
 }
