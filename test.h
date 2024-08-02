@@ -10,5 +10,7 @@
 void ADDSUB();
 void MUL();
 void KARA();
+void GenBigTV();
+void BigKARA();
 void REDUCTION();
 void INVERSION();

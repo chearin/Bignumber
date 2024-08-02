@@ -44,9 +44,14 @@ void OperandScanning(BIGNUM* r, const BIGNUM* a, const BIGNUM* b)
 	for (int i = 0; i < b->top; i++)
 	{
 		tmpB.d[i] = b->d[i];
-	}
+	}	
 	tmpA.top = a->top;
 	tmpB.top = b->top;
+
+	for (int i = 0; i < r->top; i++)
+	{
+		r->d[i] = 0;
+	}
 
 	for (int i = 0; i < tmpA.top; i++)
 	{

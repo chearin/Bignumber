@@ -140,7 +140,7 @@ void FLT(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 			fastReduction(inv, inv, P);
 			if ((exp.d[i] >> j) & 0x00000001)
 			{
-				ProductScanning(inv, inv, a);
+				OperandScanning(inv, inv, a);
 				fastReduction(inv, inv, P);
 			}
 		}
@@ -162,7 +162,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 	//z3
 	Squaring(&tmp, a);
 	fastReduction(&tmp, &tmp, P);
-	ProductScanning(&z3, &tmp, a);
+	OperandScanning(&z3, &tmp, a);
 	fastReduction(&z3, &z3, P);
 
 	//z15
@@ -173,7 +173,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&z15, &tmp, &z3);
+	OperandScanning(&z15, &tmp, &z3);
 	fastReduction(&z15, &z15, P);
 
 	//t0
@@ -184,7 +184,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&t0, &tmp, &z3);
+	OperandScanning(&t0, &tmp, &z3);
 	fastReduction(&t0, &t0, P);
 
 	//t1
@@ -195,7 +195,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&t1, &tmp, &t0);
+	OperandScanning(&t1, &tmp, &t0);
 	fastReduction(&t1, &t1, P);
 
 	//t2
@@ -206,14 +206,14 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&tmp, &tmp, &t1);
+	OperandScanning(&tmp, &tmp, &t1);
 	fastReduction(&tmp, &tmp, P);
 	for (int i = 0; i < 6; i++)
 	{
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&t2, &tmp, &t0);
+	OperandScanning(&t2, &tmp, &t0);
 	fastReduction(&t2, &t2, P);
 
 	//t3
@@ -224,7 +224,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&t3, &tmp, &z3);
+	OperandScanning(&t3, &tmp, &z3);
 	fastReduction(&t3, &t3, P);
 
 	//t4
@@ -235,7 +235,7 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&tmp, &tmp, a);
+	OperandScanning(&tmp, &tmp, a);
 	fastReduction(&tmp, &tmp, P);
 	for (int i = 0; i < 95; i++)
 	{
@@ -253,14 +253,14 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&tmp, &tmp, &t3);
+	OperandScanning(&tmp, &tmp, &t3);
 	fastReduction(&tmp, &tmp, P);
 	for (int i = 0; i < 32; i++)
 	{
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&t5, &tmp, &t3);
+	OperandScanning(&t5, &tmp, &t3);
 	fastReduction(&t5, &t5, P);
 
 	//t
@@ -271,13 +271,13 @@ void FLT256(BIGNUM* inv, const BIGNUM* P, const BIGNUM* a)
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(&tmp, &tmp, &t2);
+	OperandScanning(&tmp, &tmp, &t2);
 	fastReduction(&tmp, &tmp, P);
 	for (int i = 0; i < 2; i++)
 	{
 		Squaring(&tmp, &tmp);
 		fastReduction(&tmp, &tmp, P);
 	}
-	ProductScanning(inv, &tmp, a);
+	OperandScanning(inv, &tmp, a);
 	fastReduction(inv, inv, P);
 }

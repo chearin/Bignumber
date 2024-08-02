@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 typedef struct bignum_st {
-    uint32_t d[16];
+    uint32_t d[64];
     int top; //실제 사용중인 d 배열의 크기
     uint8_t cb; //carry 또는 borrow
 }BIGNUM;

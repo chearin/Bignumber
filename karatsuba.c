@@ -1,6 +1,6 @@
 #include "karatsuba.h"
 
-void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
+void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 {
 	BIGNUM R0 = { {0,}, 0, 0 };
 	BIGNUM R1 = { {0,}, 0, 0 };
@@ -16,9 +16,9 @@ void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 
 	uint32_t AB[2] = { 0, };
 	
-	if (x)
+	if (depth > *maxD)
 	{
-		*depth += 1;
+		*maxD = depth;
 	}
 	
 	int l = a->top;
@@ -80,33 +80,11 @@ void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 
 	//R2 = a1 * b1
-	if (x)
-	{
-		karaAdd(&R2, &a1, &b1, depth, 0);
-	}
-	else
-	{
-		karaAdd(&R2, &a1, &b1, depth, 0);
-	}	
+	karaAdd(&R2, &a1, &b1, maxD, depth + 1);
 	//R0 = a0 * b0
-	if (x)
-	{
-		karaAdd(&R0, &a0, &b0, depth, 0);
-	}
-	else
-	{
-		karaAdd(&R0, &a0, &b0, depth, 0);
-	}
-	
+	karaAdd(&R0, &a0, &b0, maxD, depth + 1);
 	//R1 = asum * bsum - R2 - R0
-	if (x)
-	{
-		karaAdd(&R1, &asum, &bsum, depth, 1);
-	}
-	else
-	{
-		karaAdd(&R1, &asum, &bsum, depth, 0);
-	}
+	karaAdd(&R1, &asum, &bsum, maxD, depth + 1);
 	BignumberSub(&R1, &R1, &R2);
 	BignumberSub(&R1, &R1, &R0);
 
@@ -147,7 +125,7 @@ void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 }
 
-void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
+void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 {
 	BIGNUM R0 = { {0,}, 0, 0 };
 	BIGNUM R1 = { {0,}, 0, 0 };
@@ -165,9 +143,9 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	uint32_t AB[2] = { 0, };
 	uint8_t t = 0;
 
-	if (x)
+	if (depth > *maxD)
 	{
-		*depth += 1;
+		*maxD = depth;
 	}
 
 	int l = a->top;
@@ -229,32 +207,11 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 
 	//R2 = a1 * b1
-	if (x)
-	{
-		karaSub(&R2, &a1, &b1, depth, 0);
-	}
-	else
-	{
-		karaSub(&R2, &a1, &b1, depth, 0);
-	}
+	karaSub(&R2, &a1, &b1, maxD, depth + 1);
 	//R0 = a0 * b0
-	if (x)
-	{
-		karaSub(&R0, &a0, &b0, depth, 0);
-	}
-	else
-	{
-		karaSub(&R0, &a0, &b0, depth, 0);
-	}
+	karaSub(&R0, &a0, &b0, maxD, depth + 1);
 	//R1 = R2 + R0 - (-1)^t * (asub * bsub)
-	if (x)
-	{
-		karaSub(&R1, &asub, &bsub, depth, 1);
-	}
-	else
-	{
-		karaSub(&R1, &asub, &bsub, depth, 0);
-	}
+	karaSub(&R1, &asub, &bsub, maxD, depth + 1);
 	BignumberAdd(&tmp, &R2, &R0);
 	if (tmp.cb)
 	{
@@ -312,7 +269,7 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 }
 
-void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
+void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 {
 	BIGNUM R0 = { {0,}, 0, 0 };
 	BIGNUM R1 = { {0,}, 0, 0 };
@@ -326,14 +283,12 @@ void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	BIGNUM b1 = { {0,}, 0, 0 };
 	BIGNUM bsum = { {0,}, 0, 0 };
 
-	uint32_t AB[2] = { 0, };
-
-	if (x)
-	{
-		*depth += 1;
-	}
-
 	int l = a->top;
+
+	if (depth > *maxD)
+	{
+		*maxD = depth;
+	}
 
 	if (l < b->top)
 	{
@@ -343,7 +298,7 @@ void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	//base case
 	if (depth == 2)
 	{
-		ProductScanning(r, a, b);
+		OperandScanning(r, a, b);
 		return;
 	}
 
@@ -378,33 +333,11 @@ void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 
 	//R2 = a1 * b1
-	if (x)
-	{
-		karaAdd(&R2, &a1, &b1, depth, 0);
-	}
-	else
-	{
-		karaAdd(&R2, &a1, &b1, depth, 0);
-	}
+	karaAddD2(&R2, &a1, &b1, maxD, depth + 1);
 	//R0 = a0 * b0
-	if (x)
-	{
-		karaAdd(&R0, &a0, &b0, depth, 0);
-	}
-	else
-	{
-		karaAdd(&R0, &a0, &b0, depth, 0);
-	}
-
+	karaAddD2(&R0, &a0, &b0, maxD, depth + 1);
 	//R1 = asum * bsum - R2 - R0
-	if (x)
-	{
-		karaAdd(&R1, &asum, &bsum, depth, 1);
-	}
-	else
-	{
-		karaAdd(&R1, &asum, &bsum, depth, 0);
-	}
+	karaAddD2(&R1, &asum, &bsum, maxD, depth + 1);
 	BignumberSub(&R1, &R1, &R2);
 	BignumberSub(&R1, &R1, &R0);
 
@@ -445,7 +378,7 @@ void karaAddD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 }
 
-void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
+void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 {
 	BIGNUM R0 = { {0,}, 0, 0 };
 	BIGNUM R1 = { {0,}, 0, 0 };
@@ -460,15 +393,14 @@ void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	BIGNUM b1 = { {0,}, 0, 0 };
 	BIGNUM bsub = { {0,}, 0, 0 };
 
-	uint32_t AB[2] = { 0, };
 	uint8_t t = 0;
 
-	if (x)
-	{
-		*depth += 1;
-	}
-
 	int l = a->top;
+
+	if (depth > *maxD)
+	{
+		*maxD = depth;
+	}
 
 	if (l < b->top)
 	{
@@ -478,7 +410,7 @@ void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	//base case
 	if (depth == 2)
 	{
-		ProductScanning(r, a, b);
+		OperandScanning(r, a, b);
 		return;
 	}
 
@@ -513,32 +445,11 @@ void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* depth, int x)
 	}
 
 	//R2 = a1 * b1
-	if (x)
-	{
-		karaSub(&R2, &a1, &b1, depth, 0);
-	}
-	else
-	{
-		karaSub(&R2, &a1, &b1, depth, 0);
-	}
+	karaSubD2(&R2, &a1, &b1, maxD, depth + 1);
 	//R0 = a0 * b0
-	if (x)
-	{
-		karaSub(&R0, &a0, &b0, depth, 0);
-	}
-	else
-	{
-		karaSub(&R0, &a0, &b0, depth, 0);
-	}
+	karaSubD2(&R0, &a0, &b0, maxD, depth + 1);
 	//R1 = R2 + R0 - (-1)^t * (asub * bsub)
-	if (x)
-	{
-		karaSub(&R1, &asub, &bsub, depth, 1);
-	}
-	else
-	{
-		karaSub(&R1, &asub, &bsub, depth, 0);
-	}
+	karaSubD2(&R1, &asub, &bsub, maxD, depth + 1);
 	BignumberAdd(&tmp, &R2, &R0);
 	if (tmp.cb)
 	{
