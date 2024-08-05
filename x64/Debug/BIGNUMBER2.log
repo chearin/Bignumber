@@ -1,21 +1,2 @@
-﻿  karatsuba.c
-  test.c
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(83,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(84,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(174,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(175,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(296,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(297,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(298,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(299,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(557,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(558,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(559,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(561,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(562,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(563,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(630,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(724,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-C:\Users\happy\source\repos\2024(인턴)\ECC\BIGNUMBER2\test.c(725,9): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
-  코드를 생성하고 있습니다...
+﻿  reduction.c
   BIGNUMBER2.vcxproj -> C:\Users\happy\source\repos\2024(인턴)\ECC\x64\Debug\BIGNUMBER2.exe

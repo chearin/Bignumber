@@ -192,7 +192,7 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 		b1.d[i - l / 2] = b->d[i];
 		b1.top++;
 	}
-	//asub = a1 - a0, bsub = b1 - b0
+	//asub = |a1 - a0|, bsub = |b1 - b0|
 	BignumberSub(&asub, &a1, &a0);
 	if (asub.cb)
 	{
@@ -430,7 +430,7 @@ void karaSubD2(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth
 		b1.d[i - l / 2] = b->d[i];
 		b1.top++;
 	}
-	//asub = a1 - a0, bsub = b1 - b0
+	//asub = |a1 - a0|, bsub = |b1 - b0|
 	BignumberSub(&asub, &a1, &a0);
 	if (asub.cb)
 	{

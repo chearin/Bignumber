@@ -151,3 +151,35 @@ void PF_substraction(BIGNUM* c, const BIGNUM* P, const BIGNUM* a, const BIGNUM* 
 		BignumberAdd(c, c, P);
 	}
 }
+
+void BignumberLShift32(BIGNUM* r, const BIGNUM* a, const uint32_t n)
+{
+	for (int i = 0; i < a->top; i++)
+	{
+		r->d[i + n] = a->d[i];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		r->d[i] = 0;
+	}
+	r->top = a->top + n;
+}
+
+void BignumberLShift(BIGNUM* r, const BIGNUM* a, const uint32_t n)
+{
+	uint32_t q = n / 32;
+	uint32_t rest = n % 32;
+	uint32_t atop = a->top;
+
+	BignumberLShift32(r, a, q);
+	if (rest)
+	{
+		for (int i = r->top; i > 0; i--)
+		{
+			r->d[i] = r->d[i] << rest;
+			r->d[i] += r->d[i - 1] >> (32 - rest);
+		}
+		r->d[0] <<= rest;
+		r->top = atop + q + 1;
+	}
+}

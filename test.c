@@ -580,6 +580,7 @@ void REDUCTION()
 	FILE* fp0 = NULL;
 	FILE* fp1 = NULL;
 	FILE* fp2 = NULL;
+	FILE* fp3 = NULL;
 
 	unsigned char input_str[1000] = { 0 };
 	uint32_t P256[8] = { 0 };
@@ -592,12 +593,13 @@ void REDUCTION()
 	size_t len = 0;
 
 	unsigned long long start = 0, end = 0;
-	unsigned long long FASTcc = 0;
+	unsigned long long FASTcc = 0, FAST2cc = 0;
 	int count = 0;
 
 	fp0 = fileOpen("P256값.txt", "r");
 	fp1 = fileOpen("TV_MUL_TV.txt", "r");
 	fp2 = fileOpen("TV_FASTREDUCTION.txt", "w");
+	fp3 = fileOpen("TV_FASTREDUCTION2.txt", "w");
 
 	//p256값 저장
 	fscanf(fp0, "%s", input_str);
@@ -626,12 +628,28 @@ void REDUCTION()
 			fprintf(fp2, "%08X", B.d[i]);
 		}
 		fprintf(fp2, "\n\n");
+
+		//빠른 감산2
+		initBignum(opB, P.top, &B);
+		start = cpucycles();
+		fastReduction2(&B, &A, &P);
+		end = cpucycles();
+		FAST2cc += (end - start);
+
+		//빠른 감산 결과값 파일에 쓰기
+		for (int i = B.top - 1; i >= 0; i--)
+		{
+			fprintf(fp3, "%08X", B.d[i]);
+		}
+		fprintf(fp3, "\n\n");
 	}
 	printf("FASTcc = %d\n", FASTcc / count);
+	printf("FAST2cc = %d\n", FAST2cc / count);
 
 	fclose(fp0);
 	fclose(fp1);
 	fclose(fp2);
+	fclose(fp3);
 }
 
 void INVERSION()

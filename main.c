@@ -11,11 +11,11 @@
 int main()
 {
 	//ADDSUB();
-	MUL();
-	KARA();
+	//MUL();
+	//KARA();
 	//GenBigTV();
-	BigKARA();
-	//REDUCTION();
+	//BigKARA();
+	REDUCTION();
 	//INVERSION();
 
 	return 0;
