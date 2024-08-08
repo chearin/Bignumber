@@ -7,6 +7,8 @@
 #include "test.h"
 #include "cpucycles.h"
 #include "karatsuba.h"
+#include "reduction.h"
+#include "inversion.h"
 
 int main()
 {
