@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "test.h"
-#include "cpucycles.h"
 
 void ADDSUB()
 {

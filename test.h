@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "util.h"
+#include "cpucycles.h"
 #include "bn.h"
 #include "karatsuba.h"
 #include "reduction.h"
