@@ -126,7 +126,7 @@ void karaAdd(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 }
 
 void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
-{
+	{
 	BIGNUM R0 = { {0,}, 0, 0 };
 	BIGNUM R1 = { {0,}, 0, 0 };
 	BIGNUM R2 = { {0,}, 0, 0 };
@@ -212,15 +212,28 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 	karaSub(&R0, &a0, &b0, maxD, depth + 1);
 	//R1 = R2 + R0 - (-1)^t * (asub * bsub)
 	karaSub(&R1, &asub, &bsub, maxD, depth + 1);
-	BignumberAdd(&tmp, &R2, &R0);
-	if (tmp.cb)
-	{
-		tmp.d[tmp.top] = 1;
-		tmp.top++;
-	}
+	//BignumberAdd(&tmp, &R2, &R0);
+	//if (tmp.cb)
+	//{
+	//	tmp.d[tmp.top] = 1;
+	//	tmp.top++;
+	//}
+	//if (t)
+	//{
+	//	BignumberAdd(&R1, &tmp, &R1);
+	//	if (R1.cb)
+	//	{
+	//		R1.d[R1.top] = 1;
+	//		R1.top++;
+	//	}
+	//}
+	//else
+	//{
+	//	BignumberSub(&R1, &tmp, &R1);
+	//}
 	if (t)
 	{
-		BignumberAdd(&R1, &tmp, &R1);
+		BignumberAdd(&R1, &R2, &R1);
 		if (R1.cb)
 		{
 			R1.d[R1.top] = 1;
@@ -229,8 +242,9 @@ void karaSub(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, int* maxD, int depth)
 	}
 	else
 	{
-		BignumberSub(&R1, &tmp, &R1);
+		BignumberSub(&R1, &R2, &R1);
 	}
+	BignumberAdd(&R1, &R1, &R0);
 
 	//R2*2^2l
 	for (int i = R2.top - 1; i >= 0; i--)

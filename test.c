@@ -171,7 +171,7 @@ void MUL()
 		fprintf(fp5, "\n\n");		
 	}
 	printf("OScc = %d\n", OScc / count);
-	printf("PScc = %d\n", PScc / count);
+	printf("PScc = %d\n\n", PScc / count);
 
 	fclose(fp1);
 	fclose(fp2);
@@ -295,7 +295,7 @@ void KARA()
 	printf("KAAddcc = %d\n", KAAddcc / count);
 	printf("KASubcc = %d\n", KASubcc / count);
 	printf("KAAdd2cc = %d\n", KAAdd2cc / count);
-	printf("KASub2cc = %d\n", KASub2cc / count);
+	printf("KASub2cc = %d\n\n", KASub2cc / count);
 
 	fclose(fp1);
 	fclose(fp2);
@@ -460,7 +460,7 @@ void BigKARA()
 		//카라추바 연산 512
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
-		karaAddD2(&C, &A, &B, &depth, 0);
+		karaAdd(&C, &A, &B, &depth, 0);
 		end = cpucycles();
 		BIG512KAcc += (end - start);
 
@@ -514,7 +514,7 @@ void BigKARA()
 		//카라추바 연산 1024
 		initBignum(opC, A.top + B.top, &C);
 		start = cpucycles();
-		karaAddD2(&C, &A, &B, &depth, 0);
+		karaAdd(&C, &A, &B, &depth, 0);
 		end = cpucycles();
 		BIG1024KAcc += (end - start);
 
@@ -555,7 +555,7 @@ void BigKARA()
 	}
 	printf("BIG512KAcc = %d\n", BIG512KAcc / count);
 	printf("BIG512OScc = %d\n", BIG512OScc / count);
-	printf("BIG512PScc = %d\n", BIG512PScc / count);
+	printf("BIG512PScc = %d\n\n", BIG512PScc / count);
 
 	printf("BIG1024KAcc = %d\n", BIG1024KAcc / count);
 	printf("BIG1024OScc = %d\n", BIG1024OScc / count);

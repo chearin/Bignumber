@@ -29,7 +29,7 @@ void fastReduction(BIGNUM* r, const BIGNUM* a, const BIGNUM* P)
 	PF_addition(&sum, P, &sum, &s3);
 	PF_addition(&sum, P, &sum, &s4);
 	PF_addition(&sum, P, &sum, &s5);
-	
+
 	PF_substraction(&sum, P, &sum, &s6);
 	PF_substraction(&sum, P, &sum, &s7);
 	PF_substraction(&sum, P, &sum, &s8);
@@ -67,13 +67,13 @@ void fastReduction2(BIGNUM* r, const BIGNUM* a, const BIGNUM* P)
 	BIGNUM sum = { 0, };
 	int8_t carry = 0;
 
+	carry += (s2.d[s2.top - 1] & 0x80000000) >> 31;
 	BignumberLShift(&s2, &s2, 1);
-	carry += s2.d[s2.top-1];
 	s2.top = 8;
 	BignumberAdd(&sum, &s1, &s2);
 	carry += sum.cb;
+	carry += (s3.d[s3.top - 1] & 0x80000000) >> 31;
 	BignumberLShift(&s3, &s3, 1);
-	carry += s3.d[s3.top-1];
 	s3.top = 8;
 	BignumberAdd(&sum, &sum, &s3);
 	carry += sum.cb;
